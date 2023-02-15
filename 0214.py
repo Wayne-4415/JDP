@@ -10,7 +10,7 @@ import inspect
 import time
 
 start_time = time.time()
-#全域變數111111
+#全域變數AAAAA
 N = 5
 NA = 0.6
 lambda_ = 248E-9
