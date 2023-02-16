@@ -9,10 +9,12 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 import inspect
 import time
+from progressbar import *
+
 
 start_time = time.time()
 #全域變數
-N = 6
+N = 5
 NA = 0.6
 lambda_ = 248E-9
 #sigma = 0.1
@@ -75,13 +77,7 @@ print("cell 4 finished")
 #pupil and source function
 #pupil function P(fx,fy) in f space
 def P_f(fx,fy):
-    if sqrt((fx-2**(N-4)/Lx)**2 + (fy-2**(N-4)/Lx)**2) < NA/lambda_:
-        return 1
-    elif sqrt((fx-2**(N-4)/Lx)**2 + (fy+2**(N-4)/Lx)**2) < NA/lambda_:
-        return 1
-    elif sqrt((fx+2**(N-4)/Lx)**2 + (fy-2**(N-4)/Lx)**2) < NA/lambda_:
-        return 1
-    elif sqrt((fx+2**(N-4)/Lx)**2 + (fy+2**(N-4)/Lx)**2) < NA/lambda_:
+    if sqrt((fx)**2 + (fy)**2) < NA/lambda_:
         return 1
     else:
         return 0
@@ -89,7 +85,7 @@ def P_f(fx,fy):
 #source in f space
 
 def S_f(fx,fy): #1 Conventional illumination
-    if sqrt(fx**2 + fy**2) < 0.2*NA/lambda_:
+    if sqrt(fx**2 + fy**2) < 0.6*NA/lambda_:
         return 1
     else:
         return 0
@@ -149,14 +145,6 @@ def S_f(fx,fy): #1 Conventional illumination
 #         return 0
 
 
-P = np.zeros((2**(N),2**(N)))
-
-
-for i in range(2**(N)):
-    for j in range(2**(N)):
-        P[i][j] = P_f(fx[i]+1/Lx/2,fx[j]+1/Lx/2)
-        
-plot(np.square(np.absolute(P)),"P")
 
 print("cell 5 finished")
 
@@ -164,26 +152,37 @@ print("cell 5 finished")
 
 #calculate kernal
 def kernal():
+    progress = ProgressBar()
+    P = np.zeros((2**(N+1),2**(N+1)))
+    S = np.zeros((2**(N),2**(N)))
     
+    for i in range(2**(N+1)):
+        for j in range(2**(N+1)):
+            P[i][j] = P_f(fx_double[i]+1/Lx/2,fx_double[j]+1/Lx/2)
+            
+    for i in range(2**(N)):
+        for j in range(2**(N)):
+            S[i][j] = S_f(fx[i]+1/Lx/2,fx[j]+1/Lx/2)
+            
     def T(f1,f2,g1,g2):  
         result = 0
         for i in range(2**N):
             for j in range(2**N):
-                pupil1 = P_f(f1 - i/Lx + 2**(N-1)/Lx, g1 - j/Lx + 2**(N-1)/Lx)
+                # pupil1 = P_f(f1 - i/Lx + 2**(N-1)/Lx , g1 - j/Lx + 2**(N-1)/Lx )
                 # P[f1 -i + 2**(N-1)][g1 - j + 2**(N-1)]
-                pupil2 = P_f(f2 - i/Lx + 2**(N-1)/Lx, g2 - j/Lx + 2**(N-1)/Lx)
+                # pupil2 = P_f(f2 - i/Lx + 2**(N-1)/Lx , g2 - j/Lx + 2**(N-1)/Lx )
                 # P[f2 -i + 2**(N-1)][g2 - j + 2**(N-1)]
-                result += S_f(i/Lx - 2**(N-1)/Lx, j/Lx - 2**(N-1)/Lx)*pupil1*np.conjugate(pupil2)
+                # result += S_f(i/Lx - 2**(N-1)/Lx, j/Lx - 2**(N-1)/Lx)*pupil1*np.conjugate(pupil2)
                 # S[i - 2**(N-1)][j - 2**(N-1)]
-                # result += P[f1 -i + 2**(N-1)][g1 - j + 2**(N-1)]*P[f2 -i + 2**(N-1)][g2 - j + 2**(N-1)]*S[i - 2**(N-1)][j - 2**(N-1)]
+                result += P[f1 -i + 2**N -1][g1 - j + 2**N -1]*P[f2 -i + 2**N -1][g2 - j + 2**N -1]*S[i][j]
         return result
 
     def TT():
         TT = np.zeros((2**(2*N),2**(2*N)))
-        for i in range(2**(2*N)):
+        for i in progress(range(2**(2*N))):
             for j in range(2**(2*N)):
-                TT[i][j] = T(fx[i-2**N*(ceil(i//2**N))], fx[j-2**N*(ceil(j//2**N))], fx[ceil(i//2**N)], fx[ceil(j//2**N)])
-                # TT[i][j] = T(i-2**N*(ceil(i//2**N)), j-2**N*(ceil(j//2**N)), ceil(i//2**N), ceil(j//2**N))
+                # TT[i][j] = T(fx[i-2**N*(ceil(i//2**N))], fx[j-2**N*(ceil(j//2**N))], fx[ceil(i//2**N)], fx[ceil(j//2**N)])
+                TT[i][j] = T(i-2**N*(ceil(i//2**N)), j-2**N*(ceil(j//2**N)), ceil(i//2**N), ceil(j//2**N))
         return TT
     tt = TT()
     plot(np.absolute(tt),"TCC")
@@ -196,30 +195,20 @@ def kernal():
                 kernal[state][i][j] = vh[state][i*2**N + j]
                 kernal_val[state] = s[state]
     return kernal ,kernal_val
-# kernal ,kernal_val = kernal()
-print("cell 8 finished")
-
-#%%
-#mask t(x,y) in x space 
-def t_f(x,y):
-    if (abs(abs(x) - 0.25E-6) < 0.125E-6) & (abs(abs(y) - 0.25E-6) < 0.125E-6) :
-        return 1
-    else:
-        return 0
-    
-t = np.zeros((2**N,2**N), dtype=complex)
-for i in range(2**N):
-    for j in range(2**N):
-        t[i][j] = t_f(x[i],x[j])
-# T = ft(t,x,fx)
-plot(np.square(np.absolute(t)),"t")
+kernal ,kernal_val = kernal()
 print("cell 6 finished")
+
 
 #%%
 def svd():
     phi = np.zeros((2**N,2**N), dtype=complex)
     I_total = np.zeros((2**N,2**N))
+    t = np.zeros((2**N,2**N), dtype=complex)
+    for i in range(2**N):
+        for j in range(2**N):
+            t[i][j] = t_f(x[i],x[j])
 
+    T = ft(t,x,fx)
     for state in range(Nmax):
         for i in range(2**N):
             for j in range(2**N):
@@ -228,6 +217,7 @@ def svd():
         phi = ift(phi,x,fx)
         I_total += np.real(np.square(np.absolute(phi)) * kernal_val[state])
     return I_total
+print("cell 7 finished")
 
 #%%
 def comfirm4f():
@@ -251,7 +241,7 @@ def comfirm4f():
     # plot(np.square(np.absolute(T)),"4f_P*T")
     I = ift(T,x,fx)
     return np.square(np.absolute(I))
-print("cell 10 finished")
+print("cell 8 finished")
 
 #%%
 def comfirm6f():
@@ -284,17 +274,26 @@ def comfirm6f():
     # plot(np.square(np.absolute(T)),"6f_T*P")
     I = ift(T,x,fx)
     return np.square(np.absolute(I))
+print("cell 9 finished")
+
+#%%
+#mask t(x,y) in x space 
+def t_f(x,y):
+    if (abs(abs(x) - 0.25E-6) < 0.125E-6) & (abs(abs(y) - 0.25E-6) < 0.125E-6) :
+        return 1
+    else:
+        return 0
 print("cell 11 finished")
 
 #%%9
 def main():
-    Intensity_4f = comfirm4f()
-    Intensity_6f = comfirm6f()
-    # Intensity_SOCS = svd()
+    # Intensity_4f = comfirm4f()
+    # Intensity_6f = comfirm6f()
+    Intensity_SOCS = svd()
     
-    plot(Intensity_4f,"I_4f")
-    plot(Intensity_6f,"I_6f")
-    # plot(Intensity_SOCS,"I_SOCS")
+    # plot(Intensity_4f,"I_4f")
+    # plot(Intensity_6f,"I_6f")
+    plot(Intensity_SOCS,"I_SOCS")
 
     print("--- %s seconds ---" % (time.time() - start_time))
     # print('\a')
