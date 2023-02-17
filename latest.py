@@ -207,7 +207,7 @@ def svd():
     for i in range(2**N):
         for j in range(2**N):
             t[i][j] = t_f(x[i],x[j])
-
+    plot(np.absolute(t),"t")
     T = ft(t,x,fx)
     for state in range(Nmax):
         for i in range(2**N):
@@ -279,7 +279,8 @@ print("cell 9 finished")
 #%%
 #mask t(x,y) in x space 
 def t_f(x,y):
-    if (abs(abs(x) - 0.25E-6) < 0.125E-6) & (abs(abs(y) - 0.25E-6) < 0.125E-6) :
+    # if (abs(abs(x) - 0.25E-6) < 0.125E-6) & (abs(abs(y) - 0.25E-6) < 0.125E-6) :
+    if (abs(abs(x) - 0.0E-6) < 0.4E-6) & (abs(abs(y) - 0.24E-6) < 0.08E-6) :
         return 1
     else:
         return 0
