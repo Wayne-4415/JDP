@@ -14,7 +14,7 @@ from progressbar import *
 
 start_time = time.time()
 #全域變數
-N = 5
+N = 4
 NA = 0.6
 lambda_ = 248E-9
 #sigma = 0.1
@@ -177,13 +177,19 @@ def kernal():
                 result += P[f1 -i + 2**N -1][g1 - j + 2**N -1]*P[f2 -i + 2**N -1][g2 - j + 2**N -1]*S[i][j]
         return result
 
+    # def TT():
+    #     TT = np.zeros((2**(2*N),2**(2*N)))
+    #     for i in progress(range(2**(2*N))):
+    #         for j in range(2**(2*N)):
+    #             # TT[i][j] = T(fx[i-2**N*(ceil(i//2**N))], fx[j-2**N*(ceil(j//2**N))], fx[ceil(i//2**N)], fx[ceil(j//2**N)])
+    #             TT[i][j] = T(i-2**N*(ceil(i//2**N)), j-2**N*(ceil(j//2**N)), ceil(i//2**N), ceil(j//2**N))
+    #     return TT
     def TT():
         TT = np.zeros((2**(2*N),2**(2*N)))
-        for i in progress(range(2**(2*N))):
-            for j in range(2**(2*N)):
-                # TT[i][j] = T(fx[i-2**N*(ceil(i//2**N))], fx[j-2**N*(ceil(j//2**N))], fx[ceil(i//2**N)], fx[ceil(j//2**N)])
-                TT[i][j] = T(i-2**N*(ceil(i//2**N)), j-2**N*(ceil(j//2**N)), ceil(i//2**N), ceil(j//2**N))
+        for i in progress(range(2**(4*N))):
+            TT[i//2**(2*N)][i-2**(2*N)*(i//2**(2*N))] = T((i//2**(2*N))-2**N*((i//2**(2*N))//2**N), (i-2**(2*N)*(i//2**(2*N)))-2**N*((i-2**(2*N)*(i//2**(2*N)))//2**N), (i//2**(2*N))//2**N, (i-2**(2*N)*(i//2**(2*N)))//2**N)
         return TT
+    
     tt = TT()
     plot(np.absolute(tt),"TCC")
     u, s, vh = np.linalg.svd(tt)
