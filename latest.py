@@ -241,10 +241,7 @@ def comfirm4f():
     # plot(np.square(np.absolute(T)),"4f_T")
     # plot(np.square(np.absolute(P)),"4f_P")
     
-    for i in range(2**N):
-        for j in range(2**N):
-            T[i][j] = P[i][j] * T[i][j]
-    
+    T = P * T
     # plot(np.square(np.absolute(T)),"4f_P*T")
     I = ift(T,x,fx)
     return np.square(np.absolute(I))
@@ -269,15 +266,11 @@ def comfirm6f():
     J0 = ift(S,x,fx)
     # plot(np.square(np.absolute(J0)),"6f_J0")
 
-    for i in range(2**N):
-        for j in range(2**N):
-            J0[i][j] = J0[i][j] * t[i][j]
+    J0 = J0 * t
     # plot(np.square(np.absolute(J0)),"6f_J0*t")
     T = ft(J0,x,fx)
     # plot(np.square(np.absolute(T)),"6f_T")
-    for i in range(2**N):
-        for j in range(2**N):
-            T[i][j] = P[i][j] * T[i][j]
+    T = P * T
     # plot(np.square(np.absolute(T)),"6f_T*P")
     I = ift(T,x,fx)
     return np.square(np.absolute(I))
