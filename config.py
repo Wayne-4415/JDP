@@ -1,12 +1,12 @@
 import numpy as np
 from math import exp, pi, sqrt, ceil, sin, cos
 def parameter():
-    N = 6
+    N = 4
     NA = 0.6
     lambda_ = 248E-9
     z = 1E-2
     k = 2*pi/lambda_
-    Lx = 2E-4
+    Lx = 1E-5
     Nmax = 10 #use in Kernal function, must be less than N square
     x = np.zeros((2**N))
     fx = np.zeros((2**N))
