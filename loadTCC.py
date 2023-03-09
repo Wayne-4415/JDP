@@ -26,12 +26,6 @@ def svd():
         I_total += np.real(np.square(np.absolute(phi)) * kernal_val[state])
     return I_total
 
-def t_f(x,y):
-    if sqrt(x**2 + y**2) < 0.6E-6:
-        return 1
-    else:
-        return 0
-
 def kernal():
     u, s, vh = np.linalg.svd(TCC)
     kernal = np.zeros((Nmax,2**N,2**N), dtype=complex)
