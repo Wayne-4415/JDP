@@ -2,14 +2,11 @@ import matplotlib.colors as col
 import math 
 import cmath
 import numpy as np
-from numpy import linalg as LA
 from math import exp, pi, sqrt, ceil, sin, cos
-import matplotlib as mpl
 import matplotlib.pyplot as plt
 import time
+from config import *  #N, NA, lambda_, z, k, Lx, Nmax, x, fx, x_double, fx_double
 
-import config
-N, NA,lambda_, z, k, Lx, Nmax, x, fx, x_double, fx_double = config.parameter()
 
 def ft(f,x,fx):
     temp = np.zeros((len(fx), len(fx)), dtype=complex)
@@ -39,7 +36,7 @@ def plot(figure,title):
     plt.show()
     
 def t_f(x,y):
-    if sqrt(x**2 + y**2) < 0.2E-5:
+    if sqrt(x**2 + y**2) < 0.6E-6:
         return 1
     else:
         return 0
@@ -55,18 +52,32 @@ def S_f(fx,fy): #1 Conventional illumination
         return 1
     else:
         return 0
+#%%
 
+t=np.zeros((2**N,2**N), dtype = complex)
+P=np.zeros((2**N,2**N), dtype = complex)
+S=np.zeros((2**N,2**N), dtype = complex)
+for i in range(2**N):
+    for j in range(2**N):
+            t[i][j] = t_f(x[i],x[j])
+            P[i][j] = P_f(fx[i],fx[j])
+            S[i][j] = S_f(fx[i],fx[j])
+plot(np.absolute(t),"t")
+plot(np.absolute(P),"P")
+plot(np.absolute(S),"S")
 
 #%%
-f=1E-5
+#Huygens–Fresnel
+f=1E-6
 A=np.zeros((2**N,2**N), dtype = complex)
 B=np.zeros((2**N,2**N), dtype = complex)
 C=np.zeros((2**N,2**N), dtype = complex)
 D=np.zeros((2**N,2**N), dtype = complex)
+
 for i in range(2**N):
     for j in range(2**N):
             A[i][j] = t_f(x[i],x[j])
-plot(np.absolute(A),"A")
+# plot(np.absolute(A),"A")
 
 for i in range(2**N):
     for j in range(2**N):
@@ -96,7 +107,7 @@ for i in range(2**N):
     for j in range(2**N):
         for ii in range(2**N):
             for jj in range(2**N):  
-                r = sqrt((x[i]-x[ii])**2 + (x[j]-x[jj])**2 + (2*f)**2)
+                r = sqrt((x[i]-x[ii])**2 + (x[j]-x[jj])**2 + f**2)
                 D[i][j] += C[ii][jj]*cmath.exp(1j*k*r)/r
 plot(np.absolute(D),"D")
 
