@@ -1,4 +1,4 @@
-# pstd
+# TCC
 
 A Python implementation of the $k$-space pseudospectral time-domain method.
 
@@ -24,7 +24,7 @@ Documentation can be found [here](http://python-acoustics.github.io/python-acous
 
 ## License
 
-`pstd` is distributed under the BSD 3-clause license. See LICENSE for more information.
+`TCC` is distributed under the BSD 3-clause license. See LICENSE for more information.
 
 ## Contributing
 
