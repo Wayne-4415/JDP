@@ -20,7 +20,10 @@ for i in range(2**N):
 for i in range(2**(N+1)):
     x_double[i] = -1*Lx + 2*Lx*i/2**(N+1) + Lx/2**(N+1)
     fx_double[i] = (i-(2**(N+1)-1)/2)/Lx #same resolution as fx but double range
-
+xx, yy = np.meshgrid(x, x)
+fxx, fyy = np.meshgrid(fx, fx)
+xx_double, yy_double = np.meshgrid(x_double, x_double)
+fxx_double, fyy_double = np.meshgrid(fx_double, fx_double)
 def ft(f,x,fx):
     temp = np.zeros((len(fx), len(fx)), dtype=complex)
     for i in range(len(fx)):
@@ -47,19 +50,10 @@ def plot(figure,title):
     plt.show()
 
 def t_f(x,y):
-    if sqrt(x**2 + y**2) < 0.6E-6:
-        return 1
-    else:
-        return 0
+    return np.where(np.sqrt(np.square(x) + np.square(y)) < 0.6E-6, 1, 0)
 
-def P_f(fx,fy): #1 Conventional illumination
-    if sqrt(fx**2 + fy**2) < NA/lambda_:
-        return 1
-    else:
-        return 0
+def P_f(fx,fy):
+    return np.where(np.sqrt(np.square(fx) + np.square(fy)) < NA/lambda_, 1, 0)
 
-def S_f(fx,fy): #1 Conventional illumination
-    if sqrt(fx**2 + fy**2) < 0.6 * NA/lambda_:
-        return 1
-    else:
-        return 0
+def S_f(fx,fy):
+    return np.where(np.sqrt(np.square(fx) + np.square(fy)) < 0.6 * NA/lambda_, 1, 0)
