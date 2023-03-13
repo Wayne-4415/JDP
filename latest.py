@@ -1,4 +1,3 @@
-import numpy as np
 from config import *
 
 #%%
@@ -31,14 +30,16 @@ plot(np.square(np.absolute(I_4f)), "I_4f")
 #6f
 I_6f = np.zeros((2**N, 2**N), dtype=complex)
 P_shift = np.zeros((2**N, 2**N), dtype=complex)
+normalize = 0
 
 for i in range(2**N):
     for j in range(2**N):
         if S[i][j] != 0:
             P_shift[:, :] = P_double[i:2**N+i, j:2**N+j]
             I_6f += ift(P_shift * T, x, fx)
+            normalize += 1
         else:
             continue
             
-plot(np.square(np.absolute(I_6f)), "I_6f")
+plot(np.square(np.absolute(I_6f/normalize)), "I_6f")
 

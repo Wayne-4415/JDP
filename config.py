@@ -33,7 +33,7 @@ def ft(f,x,fx):
         for j in range(len(fx)):
             for ii in range(len(x)):
                 for jj in range(len(x)):
-                    temp[i,j] += f[ii,jj]*cmath.exp(-1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(Lx/len(x))
+                    temp[i,j] += f[ii,jj]*cmath.exp(-1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(Lx/len(x))**2
     return temp
 
 def ift(f,x,fx):
@@ -42,7 +42,7 @@ def ift(f,x,fx):
         for j in range(len(x)):
             for ii in range(len(fx)):
                 for jj in range(len(fx)):
-                    temp[i,j] += f[ii,jj]*cmath.exp(1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(0.5/Lx)
+                    temp[i,j] += f[ii,jj]*cmath.exp(1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(1/Lx)**2
     return temp
 
 def plot(figure,title):

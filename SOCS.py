@@ -1,11 +1,10 @@
-import numpy as np
 from config import *
 
 TCC=(np.loadtxt("a.txt"))
 
 def kernal():
     u, s, vh = np.linalg.svd(TCC)
-    kernal = np.zeros((Nmax,2**N, 2**N), dtype=complex)
+    kernal = np.zeros((Nmax, 2**N, 2**N), dtype=complex)
     kernal_val = np.zeros((Nmax), dtype=complex)
     for state in range(Nmax):
         kernal[state,:,:] = np.reshape(vh[state,:], (2**N,2**N))

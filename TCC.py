@@ -1,4 +1,3 @@
-import numpy as np
 import time
 import multiprocessing as mp
 import os
@@ -27,8 +26,10 @@ if __name__ == '__main__':
         os.remove(r'a.txt')
     except:
         pass
+    
     start_time = time.time()
     variation = []
+    
     for i in range(2**(4*N)):
         variation.append([(i//2**(2*N))-2**N*((i//2**(2*N))//2**N), (i-2**(2*N)*(i//2**(2*N)))-2**N*((i-2**(2*N)*(i//2**(2*N)))//2**N), (i//2**(2*N))//2**N, (i-2**(2*N)*(i//2**(2*N)))//2**N])
     
