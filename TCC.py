@@ -4,10 +4,10 @@ import multiprocessing as mp
 import os
 from config import *
 
-P = np.zeros((2**(N+1),2**(N+1)))
-S = np.zeros((2**(N),2**(N)))
+P = np.zeros((2**(N+1), 2**(N+1)))
+S = np.zeros((2**(N), 2**(N)))
 
-P = P_f(fxx_double+1/Lx/2,fyy_double+1/Lx/2)
+P = P_f(fxx_double + 1/Lx/2, fyy_double + 1/Lx/2)
 S = S_f(fxx, fyy)
 
 def TCC(var):
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     pool = mp.Pool(mp.cpu_count())
     pool_outputs = pool.map(TCC, variation)
 
-    TCC = np.zeros((2**(2*N),2**(2*N)))
+    TCC = np.zeros((2**(2*N), 2**(2*N)))
     for i in range(2**(2*N)):
         for j in range(2**(2*N)):
             TCC[i][j] = pool_outputs[2**(2*N)*i + j]

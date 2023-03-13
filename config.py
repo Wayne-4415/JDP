@@ -1,5 +1,5 @@
 import numpy as np
-from math import exp, pi, sqrt, ceil, sin, cos
+from math import pi
 import cmath
 import matplotlib.pyplot as plt
 
@@ -9,21 +9,24 @@ lambda_ = 248E-9
 z = 1E-2
 k = 2*pi/lambda_
 Lx = 2E-6
-Nmax = 10 #use in Kernal function, must be less than N square
+Nmax = 50 #use in Kernal function, must be less than 2**(2*N)
 x = np.zeros((2**N))
 fx = np.zeros((2**N))
 x_double = np.zeros((2**(N+1)))
 fx_double = np.zeros((2**(N+1)))
+
 for i in range(2**N):
     x[i] = -Lx/2 + Lx*i/2**N + Lx/2**(N+1)
     fx[i] = (i-(2**N-1)/2)/Lx
 for i in range(2**(N+1)):
     x_double[i] = -1*Lx + 2*Lx*i/2**(N+1) + Lx/2**(N+1)
     fx_double[i] = (i-(2**(N+1)-1)/2)/Lx #same resolution as fx but double range
+    
 xx, yy = np.meshgrid(x, x)
 fxx, fyy = np.meshgrid(fx, fx)
 xx_double, yy_double = np.meshgrid(x_double, x_double)
 fxx_double, fyy_double = np.meshgrid(fx_double, fx_double)
+
 def ft(f,x,fx):
     temp = np.zeros((len(fx), len(fx)), dtype=complex)
     for i in range(len(fx)):
@@ -32,6 +35,7 @@ def ft(f,x,fx):
                 for jj in range(len(x)):
                     temp[i,j] += f[ii,jj]*cmath.exp(-1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(Lx/len(x))
     return temp
+
 def ift(f,x,fx):
     temp = np.zeros((len(x), len(x)), dtype=complex)
     for i in range(len(x)):
@@ -40,6 +44,7 @@ def ift(f,x,fx):
                 for jj in range(len(fx)):
                     temp[i,j] += f[ii,jj]*cmath.exp(1j*2*pi*(x[ii]*fx[i]+x[jj]*fx[j])) *(0.5/Lx)
     return temp
+
 def plot(figure,title):
     fig = plt.figure()
     ax = fig.add_subplot(111)
