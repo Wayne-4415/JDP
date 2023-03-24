@@ -21,9 +21,9 @@ def socs():
     
     for state in range(Nmax):
         phi[:,:] = kernal[state, :, :]
-        # plot(np.absolute(phi),"kernal")
-        phi = ift(phi * T, x, fx)
-        I_total += np.real(np.square(np.absolute(phi)) * kernal_val[state])
+        plot(np.absolute(phi),"kernal")
+        # phi = ift(phi * T, x, fx)
+        # I_total += np.real(np.square(np.absolute(phi)) * kernal_val[state])
     return I_total
 
 kernal ,kernal_val = kernal()
