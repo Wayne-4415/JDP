@@ -6,7 +6,7 @@ from config import *
 P = np.zeros((2**(N+1), 2**(N+1)))
 S = np.zeros((2**(N), 2**(N)))
 
-P = P_f(fxx_double + 1/Lx/2, fyy_double + 1/Lx/2)
+P = P_f(fxx_double, fyy_double)
 S = S_f(fxx, fyy)
 
 def TCC(var):
