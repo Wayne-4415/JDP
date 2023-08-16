@@ -24,7 +24,7 @@ def plot(figure,title):
     ax.set_aspect('equal', adjustable='box')
     ax.set_title(title)
     contourf = ax.contourf(np.real(figure), 400, vmin=figure.min(), vmax=figure.max(), levels = 50, cmap = "gray")
-    cbar = fig.colorbar(contourf)
+    # fig.colorbar(contourf)
     plt.show()
 
 xx, yy = np.meshgrid(x, x)
@@ -60,6 +60,7 @@ for i in range(2**N):
             S[i,j] = 1
         if (abs(fx[i])-0.6*(0.25*Lfx))**2+(abs(fx[j])-0.5*(0.25*Lfx))**2 < 0.017*(0.25*Lfx)**2:
             S[i,j] = 1
+
         
 P = np.zeros((2**N,2**N))
 for i in range(2**N):
@@ -76,7 +77,7 @@ for i in range(2**N):
 
 ####################################
 '''
-define parameter in main program.
+define parameters in main program.
 
 th : the threshold of eigenvalues that calculated
 P_operator : P_operator
